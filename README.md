@@ -1,2 +1,2 @@
 # SeTar-Bot
-SeTar-Bot Source Code and Package
+SeTar-Bot Source Code and Packages

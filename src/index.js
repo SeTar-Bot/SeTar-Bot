@@ -1,5 +1,4 @@
 module.exports = {
-    //Host: 'https://discord.com', API: 'https://discord.com/api', CDN: 'https://cdn.discordapp.com',
     Client: require("./Client/Client"),
     Routes: require("./util/Routes"),
     Permissions: require("./util/Permissions"),

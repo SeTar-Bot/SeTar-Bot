@@ -42,4 +42,5 @@ maybe when we had time for it....
 
 # Support
 feel free to ask your question on our official discord server
-[![Widget for the Discord API guild](https://discord.com/api/guilds/721126627165077545/widget.png?style=banner1)](https://discord.gg/GBDkr9T)
+
+<a href="https://discord.gg/GBDkr9T"><img align="right" src="https://discord.com/api/guilds/721126627165077545/widget.png?style=banner1" alt="discord_invite"></a>

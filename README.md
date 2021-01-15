@@ -1,2 +1,2 @@
-# SeTar-Bot
-SeTar-Bot Source Code and Packages
+# Setar.js
+a Module to interact with discord api!

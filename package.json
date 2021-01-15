@@ -1,0 +1,26 @@
+{
+  "name": "setar.js",
+  "version": "0.1.1",
+  "description": "a lite lib to interact with discord api [using v6 Connection]",
+  "main": "./src/index.js/",
+  "scripts": {
+    "test": "./examples/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SeTar-Bot/SeTar-Bot/tree/core"
+  },
+  "keywords": [
+    "discord",
+    "discord.js",
+    "setar",
+    "setar.js",
+    "setarbot",
+    "bot"
+  ],
+  "dependencies": {
+    "ws": "^7.4.2"
+  },
+  "author": "EhsanFox <ehsan8184@gmail.com>",
+  "license": "ISC"
+}

@@ -1,0 +1,1 @@
+module.exports = (promise) => new Promise(resolve => promise.then(result => resolve(result)).catch(() => resolve(null)));

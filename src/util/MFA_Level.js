@@ -1,4 +1,6 @@
-module.exports = function (MFA_Level) {
-    MFA_Level[MFA_Level["NONE"] = 0] = "NONE";
-    MFA_Level[MFA_Level["ELEVATED"] = 1] = "ELEVATED";
+const MFA_Level = {
+    NONE: 0,
+    ELEVATED: 1,
 };
+
+module.exports = MFA_Level

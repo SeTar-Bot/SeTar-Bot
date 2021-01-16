@@ -1,3 +1,5 @@
-module.exports = function (TargetUserTypes) {
-    TargetUserTypes[TargetUserTypes["STREAM"] = 1] = "STREAM";
+const TargetUserTypes = {
+    STREAM: 1,
 };
+
+module.exports = TargetUserTypes

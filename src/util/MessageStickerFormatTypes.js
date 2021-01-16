@@ -1,5 +1,7 @@
-module.exports = function (MessageStickerFormatTypes) {
-    MessageStickerFormatTypes[MessageStickerFormatTypes["PNG"] = 1] = "PNG";
-    MessageStickerFormatTypes[MessageStickerFormatTypes["APNG"] = 2] = "APNG";
-    MessageStickerFormatTypes[MessageStickerFormatTypes["LOTTIE"] = 3] = "LOTTIE";
+const MessageStickerFormatTypes = {
+    PNG: 1,
+    APNG: 2,
+    LOTTIE: 3,
 };
+
+module.exports = MessageStickerFormatTypes

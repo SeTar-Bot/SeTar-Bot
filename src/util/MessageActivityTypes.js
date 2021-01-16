@@ -1,19 +1,21 @@
-module.exports = function (MessageActivityTypes) {
-    MessageActivityTypes[MessageActivityTypes["DEFAULT"] = 0] = "DEFAULT";
-    MessageActivityTypes[MessageActivityTypes["RECIPIENT_ADD"] = 1] = "RECIPIENT_ADD";
-    MessageActivityTypes[MessageActivityTypes["RECIPIENT_REMOVE"] = 2] = "RECIPIENT_REMOVE";
-    MessageActivityTypes[MessageActivityTypes["CALL"] = 3] = "CALL";
-    MessageActivityTypes[MessageActivityTypes["CHANNEL_NAME_CHANGE"] = 4] = "CHANNEL_NAME_CHANGE";
-    MessageActivityTypes[MessageActivityTypes["CHANNEL_ICON_CHANGE"] = 5] = "CHANNEL_ICON_CHANGE";
-    MessageActivityTypes[MessageActivityTypes["CHANNEL_PINNED_MESSAGE"] = 6] = "CHANNEL_PINNED_MESSAGE";
-    MessageActivityTypes[MessageActivityTypes["GUILD_MEMBER_JOIN"] = 7] = "GUILD_MEMBER_JOIN";
-    MessageActivityTypes[MessageActivityTypes["USER_PREMIUM_GUILD_SUBSCRIPTION"] = 8] = "USER_PREMIUM_GUILD_SUBSCRIPTION";
-    MessageActivityTypes[MessageActivityTypes["USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1"] = 9] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1";
-    MessageActivityTypes[MessageActivityTypes["USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2"] = 10] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2";
-    MessageActivityTypes[MessageActivityTypes["USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3"] = 11] = "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3";
-    MessageActivityTypes[MessageActivityTypes["CHANNEL_FOLLOW_ADD"] = 12] = "CHANNEL_FOLLOW_ADD";
-    MessageActivityTypes[MessageActivityTypes["GUILD_DISCOVERY_DISQUALIFIED"] = 14] = "GUILD_DISCOVERY_DISQUALIFIED";
-    MessageActivityTypes[MessageActivityTypes["GUILD_DISCOVERY_REQUALIFIED"] = 15] = "GUILD_DISCOVERY_REQUALIFIED";
-    MessageActivityTypes[MessageActivityTypes["REPLY"] = 19] = "REPLY";
-    MessageActivityTypes[MessageActivityTypes["APPLICATION_COMMAND"] = 20] = "APPLICATION_COMMAND";
+const MessageActivityTypes = {
+    DEFAULT:0,
+    RECIPIENT_ADD: 1,
+    RECIPIENT_REMOVE: 2,
+    CALL: 3,
+    CHANNEL_NAME_CHANGE:4,
+    CHANNEL_ICON_CHANGE: 5,
+    CHANNEL_PINNED_MESSAGE: 6,
+    GUILD_MEMBER_JOIN: 7,
+    USER_PREMIUM_GUILD_SUBSCRIPTION: 8,
+    USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1: 9,
+    USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2: 10,
+    USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3: 11,
+    CHANNEL_FOLLOW_ADD: 12,
+    GUILD_DISCOVERY_DISQUALIFIED:14,
+    GUILD_DISCOVERY_REQUALIFIED:15,
+    REPLY:19,
+    APPLICATION_COMMAND:20,
 };
+
+module.exports = MessageActivityTypes

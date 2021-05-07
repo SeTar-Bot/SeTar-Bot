@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "a lite lib to interact with discord api [using v6 Connection]",
   "main": "./src/index.js/",
+  "types": "./typings/index.d.ts",
   "scripts": {
     "test": "./examples/test.js"
   },

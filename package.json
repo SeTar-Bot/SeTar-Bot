@@ -22,5 +22,10 @@
     "ws": "^7.4.2"
   },
   "author": "EhsanFox <ehsan8184@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/ws": "^7.4.2",
+    "discord-api-types": "^0.18.1",
+    "tiny-typed-emitter": "^2.0.3"
+  }
 }

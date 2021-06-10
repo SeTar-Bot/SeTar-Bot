@@ -13,3 +13,10 @@ SeTar-Bot Structers such as libs that we use and we have!
  - Package created to Create Connection with MYSQLi Database and Communicate without having MYSQL Knowledge
  - You can install it with [NPM](https://www.npmjs.com/package/@setar/database) `npm install @setar/database`
  - You can also install it from Github, which is just in here at the branch of [Database](https://github.com/SeTar-Bot/SeTar-Bot/tree/database)
+
+## Zarinpal
+
+### About Package
+ - a Package to Control Your Zarinpal Payments
+ - You can install it with [NPM](https://www.npmjs.com/package/@setar/zarinpal) `npm install @setar/zarinpal`
+ - You can also install it from Github, which is just in here at the branch of [Database](https://github.com/SeTar-Bot/SeTar-Bot/tree/zarinpal)

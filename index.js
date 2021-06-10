@@ -162,3 +162,5 @@ class ZarinPal {
         });
     }
 }
+
+module.exports = ZarinPal;

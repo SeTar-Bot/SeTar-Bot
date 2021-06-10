@@ -80,7 +80,7 @@ class ZarinPal {
             .then(APIResult => {
                 resolve({
                     Status: APIResult.Status,
-                    Code: dAPIResultta.Authority,
+                    Code: APIResult.Authority,
                     URL: ((this.#SandBox) ? this.#ZarinPalInfo.Gates.sandbox : this.#ZarinPalInfo.Gates.normal) + APIResult.Authority
                 });
             })

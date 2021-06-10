@@ -101,7 +101,7 @@ class ZarinPal {
         let Data2Use = {
             MerchantID: this.#Token,
             Amount: inputs.Amount,
-		    Authority: inputs.Authority
+		    Authority: inputs.Code
         };
 
         return new Promise((resolve, reject) => {

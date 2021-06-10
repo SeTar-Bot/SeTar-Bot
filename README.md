@@ -1,15 +1,18 @@
-# SeTar-Bot
-SeTar-Bot Structers such as libs that we use and we have!
+# Zarinpal
+a Package to Control Your Zarinpal Payments
 
-## Setar.JS
- - setar.js is a usefull lib to create Discord bots or even interact with discord api!
- - You can install it with [NPM](https://www.npmjs.com/package/setar.js) `npm install setar.js@latest`
- - You can also install it from Github, which is just in here at the branch of [Core](https://github.com/SeTar-Bot/SeTar-Bot/tree/core)
- - More information? Checkout npm or the branch page!
+## Any Docs?
+Nope, it's pretty basic, setup your Zarinpal Gate at first:
+```js
+const ZarinPal = require("@setar/zarinpal");
+const MyGate = new ZarinPal('MY-MERCHANT-CODE-IN-HERE', false /* do i want sandbox option? */);
+```
 
-## Database Controller
+so about the functions, we got 4 of them
 
-### About Package
- - Package created to Create Connection with MYSQLi Database and Communicate without having MYSQL Knowledge
- - You can install it with [NPM](https://www.npmjs.com/package/@setar/database) `npm install @setar/database`
- - You can also install it from Github, which is just in here at the branch of [Database](https://github.com/SeTar-Bot/SeTar-Bot/tree/database)
+**Request** function makes a new Code and URL for a User ready to pay!
+**Information** function returns status of a Code to see if the user got paid their payment or not
+**FailedPayments** function returns a list of all The Codes that never got their payments finished
+**EnableCode** function makes a Code available to use again for user and returns the api status code
+
+**P.S:** all the functions returns promise.

@@ -1,0 +1,26 @@
+{
+  "name": "@setar/zarinpal",
+  "version": "1.0.1",
+  "description": "a Package to Control Your Zarinpal Payments",
+  "main": "index.js",
+  "engines": {
+    "node": "12.x"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["setar", "discord", "music", "bot", "discordbot", "payments", "pay", "payment", "setarbot", "3tarbot", "3tar", "setar-team", "musicbot", "payments", "zarinpal"],
+  "author": "Ehsan Fox <ehsan8184@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Setar-Bot/Setar-Bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Setar-Bot/Setar-Bot/issues"
+  },
+  "homepage": "https://github.com/Setar-Bot/Setar-Bot#readme",
+  "dependencies": {
+    "request-promise": "^4.2.6"
+  }
+}

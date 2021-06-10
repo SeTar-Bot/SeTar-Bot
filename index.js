@@ -23,11 +23,11 @@ class ZarinPal {
         {
             if(!url || !module || !data)
                 throw new Error("Funciton inputs are required.");
-            if(typeof url !== 'string' || typeof module !== 'string' || typeof data !== 'object' || typeof method !== 'boolean')
+            if(typeof url !== 'string' || typeof module !== 'string' || typeof data !== 'object')
                 throw new Error("Input types are not valid.");
 
             let Data2Send = {
-                method: 'POST',
+                method: method,
                 url: url + module,
                 body: data,
                 headers: {

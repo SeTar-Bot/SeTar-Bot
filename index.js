@@ -72,7 +72,7 @@ class ZarinPal {
 		    CallbackURL: inputs.CallbackURL,
 		    Description: (inputs.Description) ? inputs.Description : '',
 		    Email: (inputs.Email) ? inputs.Email : '',
-		    Mobile: (input.Phone) ? inputs.Phone : ''
+		    Mobile: (inputs.Phone) ? inputs.Phone : ''
         };
 
         return new Promise((resolve, reject) => {

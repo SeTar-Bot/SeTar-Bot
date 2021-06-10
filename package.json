@@ -1,6 +1,6 @@
 {
   "name": "@setar/zarinpal",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a Package to Control Your Zarinpal Payments",
   "main": "index.js",
   "engines": {

@@ -184,7 +184,7 @@ class ZarinPal {
         if(!StatusCode || typeof StatusCode !== 'number')
             throw new Error("StatusCode is invalid.");
 
-        return this.#ZarinPalInfo.Errors[StatusCode.toString()];
+        return (this.#ZarinPalInfo.Errors[StatusCode.toString()] ? this.#ZarinPalInfo.Errors[StatusCode.toString()] : "خطای نامشخص هنگام اتصال به درگاه زرین پال");
     }
 }
 

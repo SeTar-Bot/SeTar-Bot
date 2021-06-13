@@ -1,5 +1,5 @@
 let MySql = require('mysql');
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, Client } = require("discord.js");
 const fs = require("fs");
 const { jVar } = require("json-variables");
 var mysqlDump = require('mysqldump');
@@ -34,10 +34,26 @@ class Database {
     state;
     constructor(configObject, options)
     {
+        //SETUP DATA
         if(configObject)
             this.#config = configObject;
         if(options)
             this.#options = options;
+
+        //Handle Typings
+        if(options && 'logger' in options && typeof options.emitter !== 'boolean')
+            throw new Error("Logger needs to be an Object");
+        if(options && 'reconnect' in options && typeof options.emitter !== 'boolean')
+            throw new Error("Reconnect needs to be boolean");
+        if(options && 'file' in options && typeof options.emitter !== 'boolean')
+            throw new Error("File needs to be an Object");
+        if(options && 'emitter' in options && typeof options.emitter !== 'boolean')
+            throw new Error("Emitter needs to be boolean");
+        if(options && 'client' in options && !options.client instanceof Client)
+            throw new Error("The Discord.js Client is invalid.");
+
+        if(options && 'emitter' in options && options.emitter == true && !'client' in options)
+            throw new Error('For turning emitter on, you need a Discord.js Client as the EventEmitter');
 
         if(!configObject && !process.env.DB_IP || !process.env.DB_USER || !process.env.DB_PASS)
             throw new Error("No Config Object neither DB Information on env found.");
@@ -87,18 +103,30 @@ class Database {
         var stats = fs.statSync(fileAddress);
         var fileSizeInBytes = stats["size"];
         var fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
-        if(fileSizeInMegabytes <= 8 ){
-            //good to go
-            let result = new MessageEmbed()
-                .attachFiles([`./${fileAddress}`])
-                .setDescription(`MYSQL Backup as [${this.Config.database}]`);
-            return { msg: result, file: fileAddress};
-        }
-        else
-        {
-            //Upload To Web-Host
-            throw new Error("File Size is more than 8mb, can't upload to the web-host at this version.");
-        }
+        return new Promise((resolve, reject) => {
+            if(fileSizeInMegabytes <= 8 ){
+                //good to go
+                let result = new MessageEmbed()
+                    .attachFiles([`./${fileAddress}`])
+                    .setDescription(`MYSQL Backup as [${this.Config.database}]`);
+                resolve({ msg: result, file: fileAddress});
+            }
+            else
+            {
+                //Upload To Web-Host
+                if(this.#options.logger && this.#options.emitter)
+                {
+                    this.#options.logger.error("File Size is more than 8mb, can't upload to the web-host at this version.");
+                    this.#options.client.emit("error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
+                }
+                else if(this.#options.logger)
+                    this.#options.logger.error("File Size is more than 8mb, can't upload to the web-host at this version.");
+                else if(this.#options.emitter)
+                    this.#options.client.emit("error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
+                
+                reject(new Error("File Size is more than 8mb, can't upload to the web-host at this version."));
+            }
+        });
     }
 
     Sync(emit = true)
@@ -146,7 +174,7 @@ class Database {
                             let tempg = this.#options.client.guilds.cache.get(n);
                             tempg.old = true;
                             if(emit)
-                            this.#options.client.emit('guildCreate', tempg);
+                                this.#options.client.emit('guildCreate', tempg);
                         }, 1000);
                     });
                 }
@@ -162,7 +190,7 @@ class Database {
                     let tempg = { count: oldGuilds.length };
                     tempg.old = true;
                     if(emit)
-                    this.#options.client.emit('guildDelete', tempg);
+                        this.#options.client.emit('guildDelete', tempg);
                 }
             }
             return result;
@@ -271,13 +299,12 @@ class Database {
         if(options)
             return new Promise((resolve, reject) => {
                 this.#client.query(sql, options, (err, result) => {
-                    if(this.#options.emitter && err)
+                    if(err)
                     {
-                        this.#options.emitter("db_error", err);
-                        return reject(err);
+                        if(this.#options.emitter)
+                            this.#options.client.emit("db_error", err);
+                        reject(err);
                     }
-                    else if(!this.#options.emitter && err)
-                        return reject(err);
                     else
                     {
 
@@ -289,7 +316,8 @@ class Database {
                             warning: result.warningCount,
                             ServerStatus: this.state
                         };
-                        this.#options.emitter("db_query", eventObjs);
+                        if(this.#options.emitter)
+                            this.#options.client.emit("db_query", eventObjs);
                         resolve(result);
                     }
                 });
@@ -297,13 +325,12 @@ class Database {
         else
             return new Promise((resolve, reject) => {
                 this.#client.query(sql, (err, result) => {
-                    if(this.#options.emitter && err)
+                    if(err)
                     {
-                        this.#options.emitter("db_error", err);
-                        return reject(err);
+                        if(this.#options.emitter)
+                            this.#options.client.emit("db_error", err);
+                        reject(err);
                     }
-                    else if(!this.#options.emitter && err)
-                        return reject(err);
                     else
                     {
                         eventObjs = {
@@ -316,7 +343,7 @@ class Database {
                             result: result
                         };
                         if(this.#options.emitter)
-                            this.#options.emitter("db_query", eventObjs);
+                            this.#options.client.emit("db_query", eventObjs);
                         resolve(result);
                     }
                 });
@@ -334,13 +361,12 @@ class Database {
         sql = sql + ";";
         return new Promise((resolve, reject) => {
             this.#client.query(sql, (err, result) => {
-                if(this.#options.emitter && err)
+                if(err)
                     {
-                        this.#options.emitter("db_error", err);
-                        return reject(err);
+                        if(this.#options.emitter)
+                            this.#options.client.emit("db_error", err);
+                        reject(err);
                     }
-                    else if(!this.#options.emitter && err)
-                        return reject(err);
                     else
                     {
                         eventObjs = {
@@ -352,7 +378,7 @@ class Database {
                             result: result
                         };
                         if(this.#options.emitter)
-                            this.#options.emitter("db_get", eventObjs);
+                            this.#options.client.emit("db_get", eventObjs);
                         if(result.length == 1)
                             resolve(result[0][myKey]);
                         else if(result.length > 1 && myinput != "*")
@@ -380,13 +406,12 @@ class Database {
 
         return new Promise((resolve, reject) => {
             this.#client.query(sql, (err, result) => {
-                if(this.#options.emitter && err)
+                if(err)
                 {
-                    this.#options.emitter("db_error", err);
-                    return reject(err);
+                    if(this.#options.emitter)
+                        this.#options.client.emit("db_error", err);
+                    reject(err);
                 }
-                else if(!this.#options.emitter && err)
-                    return reject(err);
                 else
                 {
                     eventObjs = {
@@ -398,7 +423,7 @@ class Database {
                         result: result
                     };
                     if(this.#options.emitter)
-                        this.#options.emitter("db_set", eventObjs);
+                        this.#options.client.emit("db_set", eventObjs);
                     resolve(result);
                 }
             });
@@ -419,13 +444,12 @@ class Database {
 
         return new Promise((resolve, reject) => {
             this.#client.query(sql, (err, result) => {
-                if(this.#options.emitter && err)
+                if(err)
                 {
-                    this.#options.emitter("db_error", err);
-                    return reject(err);
+                    if(this.#options.emitter)
+                        this.#options.client.emit("db_error", err);
+                    reject(err);
                 }
-                else if(!this.#options.emitter && err)
-                    return reject(err);
                 else
                 {
                     eventObjs = {
@@ -437,7 +461,7 @@ class Database {
                         result: result
                     };
                     if(this.#options.emitter)
-                        this.#options.emitter("db_delete", eventObjs);
+                        this.#options.client.emit("db_delete", eventObjs);
                     resolve(result);
                 }
             });
@@ -452,13 +476,12 @@ class Database {
 
         return new Promise((resolve, reject) => {
             this.#client.query(sql, (err, result) => {
-                if(this.#options.emitter && err)
+                if(err)
                 {
-                    this.#options.emitter("db_error", err);
-                    return reject(err);
+                    if(this.#options.emitter)
+                        this.#options.client.emit("db_error", err);
+                    reject(err);
                 }
-                else if(!this.#options.emitter && err)
-                    return reject(err);
                 else
                 {
                     eventObjs = {
@@ -470,7 +493,7 @@ class Database {
                         result: result
                     };
                     if(this.#options.emitter)
-                        this.#options.emitter("db_global", eventObjs);
+                        this.#options.client.emit("db_global", eventObjs);
                     resolve(result);
                 }
             });

@@ -83,12 +83,6 @@ class Database {
             }
         this.#Connection(this.#options.reconnect);
     }
-    
-    state = {
-        stats: this.#client.state,
-        connected: (this.#client.state == "authenticated"),
-        connection: this.#client
-    };
 
     Setup(nameObj)
     {
@@ -124,12 +118,12 @@ class Database {
                 if(this.#options.logger && this.#options.emitter)
                 {
                     this.#options.logger.error("File Size is more than 8mb, can't upload to the web-host at this version.");
-                    this.#options.client.emit("error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
+                    this.#options.client.emit("db_error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
                 }
                 else if(this.#options.logger)
                     this.#options.logger.error("File Size is more than 8mb, can't upload to the web-host at this version.");
                 else if(this.#options.emitter)
-                    this.#options.client.emit("error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
+                    this.#options.client.emit("db_error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
                 
                 reject(new Error("File Size is more than 8mb, can't upload to the web-host at this version."));
             }
@@ -299,7 +293,7 @@ class Database {
 
     Query(sql, options)
     {
-        if(!this.#client || !this.state.connected) throw new Error("There is no connection to the database.");
+        if(!this.#client) throw new Error("There is no connection to the database.");
         if(!sql) throw new Error("a SQL Command is required.");
         if(options && typeof options !== "object") throw new Error("Options can only be object.");
         let eventObjs;
@@ -360,9 +354,10 @@ class Database {
     Get(key, table, options)
     {
         let sql, myKey;
+        let eventObjs;
         myKey = key ? key : "*";
         if(!table) throw new Error("a Table is required.");
-        sql = `SELECT ${myKey} FROM ${table}`;
+        sql = `SELECT ${myKey} FROM ${table} `;
         if(options)
             sql = sql + `WHERE \`${options[0]}\` = '${options[1]}'`;
         sql = sql + ";";
@@ -388,11 +383,11 @@ class Database {
                             this.#options.client.emit("db_get", eventObjs);
                         if(result.length == 1)
                             resolve(result[0][myKey]);
-                        else if(result.length > 1 && myinput != "*")
+                        else if(result.length > 1 && myKey !== "*")
                         {
                             let myres = [];
                             result.forEach(e => {
-                                myres.push(e[myinput]);
+                                myres.push(e[myKey]);
                             });
                             resolve(myres);
                         }
@@ -406,6 +401,7 @@ class Database {
     Set(key, input, table, options)
     {
         let sql;
+        let eventObjs;
         if(!input || !key || !table)
             throw new Error("an input/key/table is required.");
         sql = `UPDATE ${table} SET ${key} = ?`;
@@ -439,6 +435,7 @@ class Database {
 
     Insert(table, columens, data)
     {
+        let eventObjs;
         if(!table || !columens || !data || typeof table !== 'string' || typeof columens !== 'object' || typeof data !== 'object')
             throw new Error("Table/Columens/Data didn't recived or was invalid.");
 
@@ -481,6 +478,7 @@ class Database {
     Delete(table, options)
     {
         let sql, myopt;
+        let eventObjs;
         if(!table) throw new Error("a Table is required.");
         sql = `DELETE FROM ${table} WHERE `;
         sql = options ? sql + `\`${options[0]}\` = '${options[1]};'` : sql + "1;";
@@ -516,6 +514,7 @@ class Database {
         if(!table || !key) throw new Error("a Table/Key is required.");
         let sql = `SELECT ${key} FROM ${table}`;
         sql = options ? sql + ` WHERE \`${options[0]}\` = '${options[1]}';` : sql + ";";
+        let eventObjs;
 
         return new Promise((resolve, reject) => {
             this.#client.query(sql, (err, result) => {

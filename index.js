@@ -4,6 +4,7 @@ const fs = require("fs");
 const { jVar } = require("json-variables");
 var mysqlDump = require('mysqldump');
 const moment = require("moment");
+const { resolve } = require('path');
 const jVarSettings = {
     heads: '{{',
     tails: '}}'
@@ -430,9 +431,45 @@ class Database {
         });
     }
 
-    Insert() //WILL BE ADDED LATER
+    Insert(table, columens, data)
     {
-        throw new Error("This Version doesn't support 'Insert' method.");
+        if(!table || !columens || !data || typeof table !== 'string' || typeof columens !== 'object' || typeof data !== 'object')
+            throw new Error("Table/Columens/Data didn't recived or was invalid.");
+
+        let sql = `INSERT IGNORE INTO ${table} (`;
+        columens.forEach(c => {
+            if(c == columens[columens.length]) sql = sql + `${c}) VALUES (`;
+            else sql = sql + `${c}, `;
+        });
+        data.forEach(d => {
+            if(d == data[data.length]) sql = sql + `'${d}');`;
+            else sql = sql + `'${d}', `;
+        });
+
+        return new Promise((resolve, reject) => {
+            this.#client.query(sql, function(err, result){
+                if(err)
+                {
+                    if(this.#options.emitter)
+                        this.#options.client.emit("db_error", err);
+                    reject(err);
+                }
+                else
+                {
+                    eventObjs = {
+                        query: sql,
+                        affects: result.affectedRows,
+                        changes: result.changedRows,
+                        warning: result.warningCount,
+                        ServerStatus: this.state,
+                        result: result
+                    };
+                    if(this.#options.emitter)
+                        this.#options.client.emit("db_insert", eventObjs);
+                    resolve(result);
+                }
+            });
+        });
     }
 
     Delete(table, options)

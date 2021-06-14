@@ -83,6 +83,12 @@ class Database {
             }
         this.#Connection(this.#options.reconnect);
     }
+    
+    state = {
+        stats: this.#client.state,
+        connected: (this.#client.state == "authenticated"),
+        connection: this.#client
+    };
 
     Setup(nameObj)
     {

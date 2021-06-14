@@ -1,6 +1,6 @@
 {
   "name": "@setar/database",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Utility Database controller used in Setar.",
   "main": "index.js",
   "scripts": {

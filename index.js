@@ -70,7 +70,7 @@ class Database {
                 }
                 this.state = {
                     stats: this.#client.state,
-                    connected: (this.#client.state == "authenticated"),
+                    connected: (this.#client.state == "connected"),
                     connection: this.#client
                 };
             });

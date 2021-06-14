@@ -4,7 +4,6 @@ const fs = require("fs");
 const { jVar } = require("json-variables");
 var mysqlDump = require('mysqldump');
 const moment = require("moment");
-const { resolve } = require('path');
 const jVarSettings = {
     heads: '{{',
     tails: '}}'
@@ -109,7 +108,7 @@ class Database {
                 //good to go
                 let result = new MessageEmbed()
                     .attachFiles([`./${fileAddress}`])
-                    .setDescription(`MYSQL Backup as [${this.Config.database}]`);
+                    .setDescription(`MYSQL Backup as [${this.#config.database}]`);
                 resolve({ msg: result, file: fileAddress});
             }
             else
@@ -146,7 +145,7 @@ class Database {
 
             //Sync Presence & Status
             if(botInfo.botStatus !== myStatus)
-                dbrs_1 = await this.Set('Bot', 'Activity', myAcIndex);
+                dbrs_1 = await this.Set('Bot', 'Status', myStatus);
 
             if(this.#options.file && this.#options.client.presence.activities.length > 0)
             {

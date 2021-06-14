@@ -145,7 +145,7 @@ class Database {
 
             //Sync Presence & Status
             if(botInfo.botStatus !== myStatus)
-                dbrs_1 = await this.Set('Bot', 'Status', myStatus);
+                dbrs_1 = await this.Set('Status', myStatus, 'Bot');
 
             if(this.#options.file && this.#options.client.presence.activities.length > 0)
             {
@@ -153,7 +153,7 @@ class Database {
                 const myAcIndex = this.#options.file.Activities.findIndex( ({name}) => name === myActivity.name);
             
                 if(myAcIndex >= 0 && botInfo.activity.index !== myAcIndex)
-                    dbrs_2 = await this.Set('Bot', 'Activity', myAcIndex);
+                    dbrs_2 = await this.Set('Activity', myAcIndex, 'Bot');
             }
             
             //Sync Guilds

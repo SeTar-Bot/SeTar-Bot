@@ -130,7 +130,7 @@ class Database {
         });
     }
 
-    Sync(emit = true)
+    async Sync(emit = true)
     {
         if(!this.#options.client) throw new Error("a Discord.js Client is required to Sync Database with it.");
         if(!this.#options.file) console.warn('[Warning]: Settings file not found.\nPresence sync is not gonna happen.');
@@ -142,7 +142,7 @@ class Database {
             removedGuilds: null
         };
         const myStatus = this.#options.client.presence.status;
-        this.Info(3, true).then(botInfo => {
+        this.Info(3, true).then( async botInfo => {
 
             //Sync Presence & Status
             if(botInfo.botStatus !== myStatus)
@@ -198,7 +198,7 @@ class Database {
         });
     }
 
-    Info(type, input)
+    async Info(type, input)
     {
         if(!type || !input) throw new Error("a Type/Key is required.");
         if(this.#Info.hasOwnProperty("setup")) throw new Error("You need to setup table information before asking for information.");
@@ -269,7 +269,7 @@ class Database {
                         delete ActivityObject['vars'];
                     }
                 }
-                    let AllPrefixes = await module.exports.global('prefix', 'v2_GUILDS');
+                    let AllPrefixes = await this.Global('v2_GUILDS', 'prefix');
 
                     result = {
                         guilds: serverCount[0]['COUNT(*)'],

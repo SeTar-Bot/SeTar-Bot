@@ -396,11 +396,11 @@ class Database {
         });
     }
 
-    Set(key, input, table, options)
+    Set(input, table, options)
     {
         let sql;
         if(!input || !key || !table)
-            throw new Error("an input/key/table is required.");
+            throw new Error("an input/table is required.");
         sql = `UPDATE ${table} SET ${input} = ?`;
         sql = options ? sql + `\`WHERE ${options[0]}\` = '${options[1]}';` : sql + ";";
 

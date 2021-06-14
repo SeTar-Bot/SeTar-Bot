@@ -91,7 +91,7 @@ class Database {
         this.#Info = nameObj;
     }
 
-    Backup()
+    async Backup()
     {
         const time = moment(new Date()).format('YYYY-MM-DD');
         const fileAddress = `Backup_${time}.sql`;

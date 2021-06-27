@@ -49,7 +49,7 @@ class Logger {
         if(opt && typeof opt !== 'object')
             throw new Error("Options needs to Be Object.");
 
-        let useropt = (opt && 'sentry' in opt || 'Connection' in opt) ? opt : { sentry: this.#Options.sentry, Connection: this.#Options.Error.Connection, ConnectionData: this.#Options.Error.ConnectionData };
+        let useropt = (typeof opt == 'object' && 'sentry' in opt || 'Connection' in opt) ? opt : { sentry: this.#Options.sentry, Connection: this.#Options.Error.Connection, ConnectionData: this.#Options.Error.ConnectionData };
         
         if(useropt)
             if('sentry' in useropt && typeof useropt.sentry == 'string')
@@ -87,7 +87,7 @@ class Logger {
         
         if(opt && typeof opt !== 'object')
             throw new Error("Options needs to Be Object.");
-        let useropt = (opt && 'sentry' in opt || 'Connection' in opt) ? opt : { sentry: this.#Options.sentry, Connection: this.#Options.Log.Connection, ConnectionData: this.#Options.Log.ConnectionData };
+        let useropt = (typeof opt == 'object' && 'sentry' in opt || 'Connection' in opt) ? opt : { sentry: this.#Options.sentry, Connection: this.#Options.Log.Connection, ConnectionData: this.#Options.Log.ConnectionData };
 
         if(useropt)
             if('Connection' in useropt && useropt.Connection)

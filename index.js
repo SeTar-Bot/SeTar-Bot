@@ -21,15 +21,24 @@ class Logger {
             this.#Options.sentry = data.sentry;
         else this.#Options.sentry = null;
 
-        if(!'Error' in data || typeof data.Error !== 'object')
-            this.#Options.Error = { Connection: false, ConnectionData: false };
-        else this.#Options.Error = data.Error;
+        if('Error' in data || typeof data.Error == 'object' && data.Error.Connection instanceof Client || data.Error.ConnectionData instanceof WebhookClient)
+            if(data.Error.Connection instanceof Client && typeof data.Error.ConnectionData == 'string')
+                this.#Options.Error = data.Error;
+            else if(data.Error.Connection instanceof WebhookClient)
+                this.#Options.Error = data.Error;
+            else throw new Error("Error Object recived, but in a wrong way.");
+        else this.#Options.Error = { Connection: false, ConnectionData: false };
 
-        if(!'Log' in data || typeof data.Log !== 'object')
-            this.#Options.Log = { Connection: false, ConnectionData: false };
-        else this.#Options.Log = data.Log;
+        if('Log' in data || typeof data.Log == 'object')
+            if(data.Log.Connection instanceof Client && typeof data.Log.ConnectionData == 'string')
+                this.#Options.Log = data.Log;
+            else if(data.Log.Connection instanceof WebhookClient)
+                this.#Options.Log = data.Log;
+            else throw new Error("Log Object recived, but in a wrong way.")
+        else this.#Options.Log = { Connection: false, ConnectionData: false };
 
-        console.warn(`[WARN]: No Sentry, Client, Webhook recieved.\nModule would Act Same as the Original Console.`);
+        if(!'sentry' in data && !'Error' in data && !'Log' in data)
+            console.warn(`[WARN]: No Sentry, Client, Webhook recieved, Module would Act Same as the Original Console.`);
     }
 
     error(data, opt)

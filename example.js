@@ -2,6 +2,7 @@ const Logger = require("@setar/logger");
 const { Client, WebhookClient } = require("discord.js");
 
 const myClient = new Client();
+myClient.login();
 const myWebhookClient = new WebhookClient('WEBHOOK_ID', 'WEBHOOK_TOKEN');
 
 const MyConsole = new Logger({

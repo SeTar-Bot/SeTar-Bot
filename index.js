@@ -46,7 +46,7 @@ class Logger {
         if(!data)
             throw new Error("No Data/String/Error Recieved.");
         
-        if(typeof opt !== 'object')
+        if(opt && typeof opt !== 'object')
             throw new Error("Options needs to Be Object.");
 
         let useropt = (opt && 'sentry' in opt || 'Connection' in opt) ? opt : { sentry: this.#Options.sentry, Connection: this.#Options.Error.Connection, ConnectionData: this.#Options.Error.ConnectionData };
@@ -85,7 +85,7 @@ class Logger {
         if(!data)
             throw new Error("No Data/String/Error Recieved.");
         
-        if(typeof opt !== 'object')
+        if(opt && typeof opt !== 'object')
             throw new Error("Options needs to Be Object.");
         let useropt = (opt && 'sentry' in opt || 'Connection' in opt) ? opt : { sentry: this.#Options.sentry, Connection: this.#Options.Log.Connection, ConnectionData: this.#Options.Log.ConnectionData };
 

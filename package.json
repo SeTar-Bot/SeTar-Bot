@@ -1,0 +1,38 @@
+{
+  "name": "@setar/logger",
+  "version": "1.1.0",
+  "description": "Utility Console Logger in Setar.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "keywords": [
+    "setar",
+    "setar.js",
+    "setar-bot",
+    "discord",
+    "3tarbot",
+    "logger",
+    "console.log",
+    "log",
+    "console",
+    "discord",
+    "bot",
+    "discordbot",
+    "music",
+    "musicbot"
+  ],
+  "author": "Ehsan Fox <ehsan8184@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Setar-Bot/Setar-Bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Setar-Bot/Setar-Bot/issues"
+  },
+  "homepage": "https://github.com/Setar-Bot/Setar-Bot#readme"
+}

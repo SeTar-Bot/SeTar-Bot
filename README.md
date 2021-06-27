@@ -1,22 +1,36 @@
-# SeTar-Bot
-SeTar-Bot Structers such as libs that we use and we have!
+# Logger
+a Simple Logger Class that you can replace with your Own Console
 
-## Setar.JS
- - setar.js is a usefull lib to create Discord bots or even interact with discord api!
- - You can install it with [NPM](https://www.npmjs.com/package/setar.js) `npm install setar.js@latest`
- - You can also install it from Github, which is just in here at the branch of [Core](https://github.com/SeTar-Bot/SeTar-Bot/tree/core)
- - More information? Checkout npm or the branch page!
+## About Package
+You Can log the data you want same as `console.log` but you can define to send it throw a Discord Webhook or Catch Errors with Sentry
+You even can Specifiy it for only 1 times use.
 
-## Database Controller
+## How to Use?
 
-### About Package
- - Package created to Create Connection with MYSQLi Database and Communicate without having MYSQL Knowledge
- - You can install it with [NPM](https://www.npmjs.com/package/@setar/database) `npm install @setar/database`
- - You can also install it from Github, which is just in here at the branch of [Database](https://github.com/SeTar-Bot/SeTar-Bot/tree/database)
+For Setup:
+```js
+const Logger = require("@setar/logger");
+const MyConsole = new Logger({
+ sentry: 'MY_SENTRY_STRING_URI',
+ Log: {
+  Connection: Client_In_Here, //You Can Pass your own Discord.js Client or Webhook Client
+  ConnectionData: 'CHANNEL_ID' //Only if you passed the Discord.js Client
+ },
+ Error: {
+  Connection: Client_In_Here, //You Can Pass your own Discord.js Client or Webhook Client
+  ConnectionData: 'CHANNEL_ID' //Only if you passed the Discord.js Client
+ }
+});
+```
 
-## Zarinpal
+For 1 Time Run:
+```js
+MyConsole.error('this is an Error.', {
+ sentry: 'MY_SENTRY_STRING_URI', //ONLY WORKS FOR `error` Function
+ Connection: Client_In_Here //You Can Pass your own Discord.js Client or Webhook Client
+ ConnectionData: 'CHANNEL_ID' //Only if you passed the Discord.js Client
+});
+```
 
-### About Package
- - a Package to Control Your Zarinpal Payments
- - You can install it with [NPM](https://www.npmjs.com/package/@setar/zarinpal) `npm install @setar/zarinpal`
- - You can also install it from Github, which is just in here at the branch of [Database](https://github.com/SeTar-Bot/SeTar-Bot/tree/zarinpal)
+## More Examples?
+You can find More examples in [Here]()

@@ -1,6 +1,6 @@
 {
   "name": "@setar/logger",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Utility Console Logger in Setar.",
   "main": "index.js",
   "scripts": {
@@ -34,5 +34,9 @@
   "bugs": {
     "url": "https://github.com/Setar-Bot/Setar-Bot/issues"
   },
-  "homepage": "https://github.com/Setar-Bot/Setar-Bot#readme"
+  "homepage": "https://github.com/Setar-Bot/Setar-Bot#readme",
+  "dependencies": {
+    "@sentry/node": "^6.7.2",
+    "discord.js": "^12.5.3"
+  }
 }

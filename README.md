@@ -33,4 +33,4 @@ MyConsole.error('this is an Error.', {
 ```
 
 ## More Examples?
-You can find More examples in [Here]()
+You can find More examples in [Example.js](https://github.com/SeTar-Bot/SeTar-Bot/blob/logger/example.js)

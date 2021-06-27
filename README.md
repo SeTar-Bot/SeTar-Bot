@@ -20,3 +20,10 @@ SeTar-Bot Structers such as libs that we use and we have!
  - a Package to Control Your Zarinpal Payments
  - You can install it with [NPM](https://www.npmjs.com/package/@setar/zarinpal) `npm install @setar/zarinpal`
  - You can also install it from Github, which is just in here at the branch of [Database](https://github.com/SeTar-Bot/SeTar-Bot/tree/zarinpal)
+
+## Logger
+
+### About Package
+ - a Simple Logger Class that you can replace with your Own Console
+ - You can install it with [NPM](https://www.npmjs.com/package/@setar/logger) `npm install @setar/logger`
+ - You can also install it from Github, which is just in here at the branch of [Logger](https://github.com/SeTar-Bot/SeTar-Bot/tree/logger)

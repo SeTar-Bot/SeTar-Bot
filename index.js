@@ -45,38 +45,40 @@ class Logger {
     {
         if(!data)
             throw new Error("No Data/String/Error Recieved.");
-        
+
+        let useropt = { sentry: this.#Options.sentry, Connection: this.#Options.Log.Connection, ConnectionData: this.#Options.Log.ConnectionData };
+
         if(opt && typeof opt !== 'object')
             throw new Error("Options needs to Be Object.");
+        else
+            if(typeof opt == 'object')
+                if('sentry' in opt || 'Connection' in opt)
+                    useropt = opt;
 
-        let useropt = (typeof opt == 'object' && 'sentry' in opt || 'Connection' in opt) ? opt : { sentry: this.#Options.sentry, Connection: this.#Options.Error.Connection, ConnectionData: this.#Options.Error.ConnectionData };
-        
-        if(useropt)
-            if('sentry' in useropt && typeof useropt.sentry == 'string')
+        if('sentry' in useropt && typeof useropt.sentry == 'string')
+        {
+            const Sentry = require("@sentry/node");
+            Sentry.init({ dsn: useropt.sentry });
+
+            Sentry.captureException(data);
+        }
+
+        if('Connection' in useropt && useropt.Connection)
+            if(useropt.Connection instanceof Client && 'ConnectionData' in useropt && typeof useropt.ConnectionData == 'string')
             {
-                const Sentry = require("@sentry/node");
-                Sentry.init({ dsn: useropt.sentry });
-
-                Sentry.captureException(data);
+                useropt.Connection.channels.fetch(useropt.ConnectionData)
+                .then(optChannel => {
+                    optChannel.send(data.toString());
+                })
+                .catch(e => { throw e; });
             }
-
-            if('Connection' in useropt && useropt.Connection)
-                if(useropt.Connection instanceof Client && 'ConnectionData' in useropt && typeof useropt.ConnectionData == 'string')
-                {
-                    useropt.Connection.channels.fetch(useropt.ConnectionData)
-                    .then(optChannel => {
-                        optChannel.send(data.toString());
-                    })
-                    .catch(e => { throw e; });
-                }
-                else if(useropt.Connection instanceof WebhookClient)
-                {
-                    const optWebhook = useropt.Connection;
-                    if(typeof data == 'string' || data instanceof Error)
-                        optWebhook.send(data.toString());
-                }
-
-            
+            else if(useropt.Connection instanceof WebhookClient)
+            {
+                const optWebhook = useropt.Connection;
+                if(typeof data == 'string' || data instanceof Error)
+                    optWebhook.send(data.toString());
+            }
+  
         console.error(data);
     }
 
@@ -84,27 +86,31 @@ class Logger {
     {
         if(!data)
             throw new Error("No Data/String/Error Recieved.");
-        
+
+        let useropt = { sentry: this.#Options.sentry, Connection: this.#Options.Log.Connection, ConnectionData: this.#Options.Log.ConnectionData };
+
         if(opt && typeof opt !== 'object')
             throw new Error("Options needs to Be Object.");
-        let useropt = (typeof opt == 'object' && 'sentry' in opt || 'Connection' in opt) ? opt : { sentry: this.#Options.sentry, Connection: this.#Options.Log.Connection, ConnectionData: this.#Options.Log.ConnectionData };
+        else
+            if(typeof opt == 'object')
+                if('sentry' in opt || 'Connection' in opt)
+                    useropt = opt;
 
-        if(useropt)
-            if('Connection' in useropt && useropt.Connection)
-                if(useropt.Connection instanceof Client && typeof useropt.ConnectionData == 'string')
-                {
-                    useropt.Connection.channels.fetch(useropt.ConnectionData)
-                    .then(optChannel => {
-                        optChannel.send(data.toString());
-                    })
-                    .catch(e => { throw e; });;
-                }
-                else if(useropt.Connection instanceof WebhookClient)
-                {
-                    const optWebhook = useropt.Connection;
-                    if(typeof data == 'string' || data instanceof Error)
-                        optWebhook.send(data.toString());
-                }
+        if('Connection' in useropt && useropt.Connection)
+            if(useropt.Connection instanceof Client && typeof useropt.ConnectionData == 'string')
+            {
+                useropt.Connection.channels.fetch(useropt.ConnectionData)
+                .then(optChannel => {
+                    optChannel.send(data.toString());
+                })
+                .catch(e => { throw e; });;
+            }
+            else if(useropt.Connection instanceof WebhookClient)
+            {
+                const optWebhook = useropt.Connection;
+                if(typeof data == 'string' || data instanceof Error)
+                    optWebhook.send(data.toString());
+            }
 
         console.log(data);
     }

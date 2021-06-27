@@ -60,7 +60,7 @@ class Logger {
                 Sentry.captureException(data);
             }
 
-            if('Connection' in useropt)
+            if('Connection' in useropt && useropt.Connection)
                 if(useropt.Connection instanceof Client && 'ConnectionData' in useropt && typeof useropt.ConnectionData == 'string')
                 {
                     useropt.Connection.channels.fetch(useropt.ConnectionData)
@@ -90,7 +90,7 @@ class Logger {
         let useropt = (opt && 'sentry' in opt || 'Connection' in opt) ? opt : { sentry: this.#Options.sentry, Connection: this.#Options.Log.Connection, ConnectionData: this.#Options.Log.ConnectionData };
 
         if(useropt)
-            if('Connection' in useropt && 'ConnectionData' in useropt)
+            if('Connection' in useropt && useropt.Connection)
                 if(useropt.Connection instanceof Client && typeof useropt.ConnectionData == 'string')
                 {
                     useropt.Connection.channels.fetch(useropt.ConnectionData)

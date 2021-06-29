@@ -161,8 +161,8 @@ class Database {
             {
                 const dbGuilds = await this.Global(this.#Info.guilds, 'id');
                 const clientGuilds = this.#options.client.guilds.cache.map(e => e.id);
-                const newGuilds = clientGuilds.filter(e => !dbGuildIds.includes(e));
-                const oldGuilds = dbGuilds.filter(e => !clientGuildIds.includes(e));
+                const newGuilds = clientGuilds.filter(e => !dbGuilds.includes(e));
+                const oldGuilds = dbGuilds.filter(e => !clientGuilds.includes(e));
 
                 if(newGuilds.length > 0)
                 {
@@ -170,7 +170,7 @@ class Database {
                     result.addedGuilds = newGuilds.length;
                     newGuilds.forEach(n => {
                         setTimeout(async () => {
-                            await module.exports.insert(this.#Info.guilds, ['id'], [n]);
+                            await this.Insert(this.#Info.guilds, ['id'], [n]);
                             let tempg = this.#options.client.guilds.cache.get(n);
                             tempg.old = true;
                             if(emit)
@@ -184,7 +184,7 @@ class Database {
                     result.removedGuilds = oldGuilds.length;
                     oldGuilds.forEach(n => {
                         setTimeout(async () => {
-                            await module.exports.delete(this.#Info.guilds, ['id', n]);
+                            await this.Delete(this.#Info.guilds, ['id', n]);
                         }, 1000);
                     });
                     let tempg = { count: oldGuilds.length };

@@ -401,7 +401,7 @@ class Database {
     {
         let sql;
         let eventObjs;
-        if(!input || !key || !table)
+        if(!key || !table)
             throw new Error("an input/key/table is required.");
         sql = `UPDATE ${table} SET ${key} = ? `;
         sql = options ? sql + `WHERE \`${options[0]}\` = '${options[1]}';` : sql + ";";

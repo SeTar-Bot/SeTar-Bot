@@ -16,7 +16,7 @@ class Database {
 	    password: process.env.DB_PASS,
 	    database: process.env.DB_DBT,
     };
-    #options = {
+    options = {
         emitter: false,
         client: null,
         logger: null,
@@ -38,7 +38,7 @@ class Database {
         if(configObject)
             this.#config = configObject;
         if(options)
-            this.#options = options;
+            this.options = options;
 
         //Handle Typings
         if(options && 'logger' in options && typeof options.emitter !== 'boolean')
@@ -63,8 +63,8 @@ class Database {
             this.#client.connect( (err) => {
                 if(err)
                 {
-                    if(this.#options.logger)
-                        this.#options.logger.error(err);
+                    if(this.options.logger)
+                        this.options.logger.error(err);
                     else
                         throw err;
                 }
@@ -80,7 +80,7 @@ class Database {
                         this.#Connection(recon);
                 });
             }
-        this.#Connection(this.#options.reconnect);
+        this.#Connection(this.options.reconnect);
     }
 
     Setup(nameObj)
@@ -114,15 +114,15 @@ class Database {
             else
             {
                 //Upload To Web-Host
-                if(this.#options.logger && this.#options.emitter)
+                if(this.options.logger && this.options.emitter)
                 {
-                    this.#options.logger.error("File Size is more than 8mb, can't upload to the web-host at this version.");
-                    this.#options.client.emit("db_error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
+                    this.options.logger.error("File Size is more than 8mb, can't upload to the web-host at this version.");
+                    this.options.client.emit("db_error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
                 }
-                else if(this.#options.logger)
-                    this.#options.logger.error("File Size is more than 8mb, can't upload to the web-host at this version.");
-                else if(this.#options.emitter)
-                    this.#options.client.emit("db_error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
+                else if(this.options.logger)
+                    this.options.logger.error("File Size is more than 8mb, can't upload to the web-host at this version.");
+                else if(this.options.emitter)
+                    this.options.client.emit("db_error", { message: "File Size is more than 8mb, can't upload to the web-host at this version.", from: "Backup"});
                 
                 reject(new Error("File Size is more than 8mb, can't upload to the web-host at this version."));
             }
@@ -131,8 +131,8 @@ class Database {
 
     async Sync(emit = true)
     {
-        if(!this.#options.client) throw new Error("a Discord.js Client is required to Sync Database with it.");
-        if(!this.#options.file) console.warn('[Warning]: Settings file not found.\nPresence sync is not gonna happen.');
+        if(!this.options.client) throw new Error("a Discord.js Client is required to Sync Database with it.");
+        if(!this.options.file) console.warn('[Warning]: Settings file not found.\nPresence sync is not gonna happen.');
 
         let dbrs_1, dbrs_2;
         let result = {
@@ -140,27 +140,27 @@ class Database {
             addedGuilds: null,
             removedGuilds: null
         };
-        const myStatus = this.#options.client.presence.status;
+        const myStatus = this.options.client.presence.status;
         this.Info(3, true).then( async botInfo => {
 
             //Sync Presence & Status
             if(botInfo.botStatus !== myStatus)
                 dbrs_1 = await this.Set('Status', myStatus, 'Bot');
 
-            if(this.#options.file && this.#options.client.presence.activities.length > 0)
+            if(this.options.file && this.options.client.presence.activities.length > 0)
             {
-                const myActivity = this.#options.client.presence.activities[0];
-                const myAcIndex = this.#options.file.Activities.findIndex( ({name}) => name === myActivity.name);
+                const myActivity = this.options.client.presence.activities[0];
+                const myAcIndex = this.options.file.Activities.findIndex( ({name}) => name === myActivity.name);
             
                 if(myAcIndex >= 0 && botInfo.activity.index !== myAcIndex)
                     dbrs_2 = await this.Set('Activity', myAcIndex, 'Bot');
             }
             
             //Sync Guilds
-            if(this.#options.client.guilds.cache.size !== botInfo.guilds)
+            if(this.options.client.guilds.cache.size !== botInfo.guilds)
             {
                 const dbGuilds = await this.Global(this.#Info.guilds, 'id');
-                const clientGuilds = this.#options.client.guilds.cache.map(e => e.id);
+                const clientGuilds = this.options.client.guilds.cache.map(e => e.id);
                 const newGuilds = clientGuilds.filter(e => !dbGuilds.includes(e));
                 const oldGuilds = dbGuilds.filter(e => !clientGuilds.includes(e));
 
@@ -171,10 +171,10 @@ class Database {
                     newGuilds.forEach(n => {
                         setTimeout(async () => {
                             await this.Insert(this.#Info.guilds, ['id'], [n]);
-                            let tempg = this.#options.client.guilds.cache.get(n);
+                            let tempg = this.options.client.guilds.cache.get(n);
                             tempg.old = true;
                             if(emit)
-                                this.#options.client.emit('guildCreate', tempg);
+                                this.options.client.emit('guildCreate', tempg);
                         }, 1000);
                     });
                 }
@@ -190,7 +190,7 @@ class Database {
                     let tempg = { count: oldGuilds.length };
                     tempg.old = true;
                     if(emit)
-                        this.#options.client.emit('guildDelete', tempg);
+                        this.options.client.emit('guildDelete', tempg);
                 }
             }
             return result;
@@ -235,7 +235,7 @@ class Database {
                 let uplaylist = await this.Get('playlist', this.#Info.users, myopt);
                 let uperm = await this.Get('perm', this.#Info.users, myopt);
                 let uisBlocked = !Boolean(uperm);
-                let hasVoted = this.#options.client ? await this.#options.client.hasVoted(input.id) : null ;
+                let hasVoted = this.options.client ? await this.options.client.hasVoted(input.id) : null ;
 
                 result = {
                     isVip: uisVip,
@@ -254,9 +254,9 @@ class Database {
                 let botStatus = await this.Get('Status', 'Bot');
                 let botActivityIndex = await this.Get('Activity', 'Bot');
                 let ActivityObject;
-                if(this.#options.file)
+                if(this.options.file)
                 {
-                    ActivityObject = this.#options.file.Activities[botActivityIndex];
+                    ActivityObject = this.options.file.Activities[botActivityIndex];
                     if (botActivityIndex <= 1)
                     {
                         const myVars = {
@@ -264,7 +264,7 @@ class Database {
                             servers: serverCount[0]['COUNT(*)']
                         };
                         ActivityObject.vars = myVars;
-                        ActivityObject = jVar(this.#options.file.Activities[botActivityIndex], jVarSettings);
+                        ActivityObject = jVar(this.options.file.Activities[botActivityIndex], jVarSettings);
                         delete ActivityObject['vars'];
                     }
                 }
@@ -278,7 +278,7 @@ class Database {
                         activity:
                         {
                             index: botActivityIndex,
-                            main: this.#options.file ? ActivityObject : null,
+                            main: this.options.file ? ActivityObject : null,
                         }
                     };
                 return result;
@@ -301,8 +301,8 @@ class Database {
                 this.#client.query(sql, options, (err, result) => {
                     if(err)
                     {
-                        if(this.#options.emitter)
-                            this.#options.client.emit("db_error", err);
+                        if(this.options.emitter)
+                            this.options.client.emit("db_error", err);
                         reject(err);
                     }
                     else
@@ -316,8 +316,8 @@ class Database {
                             warning: result.warningCount,
                             ServerStatus: this.state
                         };
-                        if(this.#options.emitter)
-                            this.#options.client.emit("db_query", eventObjs);
+                        if(this.options.emitter)
+                            this.options.client.emit("db_query", eventObjs);
                         resolve(result);
                     }
                 });
@@ -327,8 +327,8 @@ class Database {
                 this.#client.query(sql, (err, result) => {
                     if(err)
                     {
-                        if(this.#options.emitter)
-                            this.#options.client.emit("db_error", err);
+                        if(this.options.emitter)
+                            this.options.client.emit("db_error", err);
                         reject(err);
                     }
                     else
@@ -342,8 +342,8 @@ class Database {
                             ServerStatus: this.state,
                             result: result
                         };
-                        if(this.#options.emitter)
-                            this.#options.client.emit("db_query", eventObjs);
+                        if(this.options.emitter)
+                            this.options.client.emit("db_query", eventObjs);
                         resolve(result);
                     }
                 });
@@ -364,8 +364,8 @@ class Database {
             this.#client.query(sql, (err, result) => {
                 if(err)
                     {
-                        if(this.#options.emitter)
-                            this.#options.client.emit("db_error", err);
+                        if(this.options.emitter)
+                            this.options.client.emit("db_error", err);
                         reject(err);
                     }
                     else
@@ -378,8 +378,8 @@ class Database {
                             ServerStatus: this.state,
                             result: result
                         };
-                        if(this.#options.emitter)
-                            this.#options.client.emit("db_get", eventObjs);
+                        if(this.options.emitter)
+                            this.options.client.emit("db_get", eventObjs);
                         if(result.length == 1)
                             resolve(result[0][myKey]);
                         else if(result.length > 1 && myKey !== "*")
@@ -410,8 +410,8 @@ class Database {
             this.#client.query(sql, [input], (err, result) => {
                 if(err)
                 {
-                    if(this.#options.emitter)
-                        this.#options.client.emit("db_error", err);
+                    if(this.options.emitter)
+                        this.options.client.emit("db_error", err);
                     reject(err);
                 }
                 else
@@ -424,8 +424,8 @@ class Database {
                         ServerStatus: this.state,
                         result: result
                     };
-                    if(this.#options.emitter)
-                        this.#options.client.emit("db_set", eventObjs);
+                    if(this.options.emitter)
+                        this.options.client.emit("db_set", eventObjs);
                     resolve(result);
                 }
             });
@@ -447,13 +447,14 @@ class Database {
             if(d == data[data.length]) sql = sql + `'${d}');`;
             else sql = sql + `'${d}', `;
         });
-
+        console.log(this);
         return new Promise((resolve, reject) => {
             this.#client.query(sql, function(err, result){
                 if(err)
                 {
-                    if(this.#options.emitter)
-                        this.#options.client.emit("db_error", err);
+                    console.log(this);
+                    if(this.options.emitter)
+                        this.options.client.emit("db_error", err);
                     reject(err);
                 }
                 else
@@ -466,8 +467,8 @@ class Database {
                         ServerStatus: this.state,
                         result: result
                     };
-                    if(this.#options.emitter)
-                        this.#options.client.emit("db_insert", eventObjs);
+                    if(this.options.emitter)
+                        this.options.client.emit("db_insert", eventObjs);
                     resolve(result);
                 }
             });
@@ -486,8 +487,8 @@ class Database {
             this.#client.query(sql, (err, result) => {
                 if(err)
                 {
-                    if(this.#options.emitter)
-                        this.#options.client.emit("db_error", err);
+                    if(this.options.emitter)
+                        this.options.client.emit("db_error", err);
                     reject(err);
                 }
                 else
@@ -500,8 +501,8 @@ class Database {
                         ServerStatus: this.state,
                         result: result
                     };
-                    if(this.#options.emitter)
-                        this.#options.client.emit("db_delete", eventObjs);
+                    if(this.options.emitter)
+                        this.options.client.emit("db_delete", eventObjs);
                     resolve(result);
                 }
             });
@@ -519,8 +520,8 @@ class Database {
             this.#client.query(sql, (err, result) => {
                 if(err)
                 {
-                    if(this.#options.emitter)
-                        this.#options.client.emit("db_error", err);
+                    if(this.options.emitter)
+                        this.options.client.emit("db_error", err);
                     reject(err);
                 }
                 else
@@ -533,8 +534,8 @@ class Database {
                         ServerStatus: this.state,
                         result: result
                     };
-                    if(this.#options.emitter)
-                        this.#options.client.emit("db_global", eventObjs);
+                    if(this.options.emitter)
+                        this.options.client.emit("db_global", eventObjs);
                     resolve(result);
                 }
             });
